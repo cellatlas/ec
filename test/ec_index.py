@@ -22,9 +22,9 @@ def write_markers(fname, markers):
 
 def read_markers(
     fname,
-    markers_ec=defaultdict(list),
-    celltype=defaultdict(),
-    marker_genes=defaultdict(),
+    markers_ec:defaultdict(list),
+    celltype:defaultdict(),
+    marker_genes:defaultdict(),
 ):
     with open(fname, "r") as f:
         for idx, line in enumerate(f.readlines()):
