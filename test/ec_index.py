@@ -70,7 +70,7 @@ if __name__ == "__main__":
     markers_fname = sys.argv[1]
     out_markers_ec_fn = sys.argv[2]
     out_groups_fn = sys.argv[3]
-    out_marker_genes_fn = sys.argv[1]
+    out_marker_genes_fn = sys.argv[4]
     ec_index(
         markers_fname, out_markers_ec_fn, out_groups_fn, out_marker_genes_fn
     )  # noqa
