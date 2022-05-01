@@ -1,4 +1,5 @@
 from collections import defaultdict
+import sys
 
 
 def write_dict(fname, d):
@@ -22,9 +23,9 @@ def write_markers(fname, markers):
 
 def read_markers(
     fname,
-    markers_ec:defaultdict(list),
-    celltype:defaultdict(),
-    marker_genes:defaultdict(),
+    markers_ec: defaultdict(list),
+    celltype: defaultdict(),
+    marker_genes: defaultdict(),
 ):
     with open(fname, "r") as f:
         for idx, line in enumerate(f.readlines()):
@@ -50,7 +51,9 @@ def read_markers(
             markers_ec[celltype[ct]] = sorted(markers_ec[celltype[ct]])
 
 
-def ec_index(markers_fname, out_markers_ec_fn, out_groups_fn, out_marker_genes_fn):
+def ec_index(
+    markers_fname, out_markers_ec_fn, out_groups_fn, out_marker_genes_fn
+):  # noqa
     markers_ec = defaultdict(list)
     celltypes = defaultdict()
     marker_genes = defaultdict()
@@ -59,3 +62,13 @@ def ec_index(markers_fname, out_markers_ec_fn, out_groups_fn, out_marker_genes_f
     write_markers(out_markers_ec_fn, markers_ec)
     write_dict(out_groups_fn, celltypes)
     write_dict(out_marker_genes_fn, marker_genes)
+
+
+if __name__ == "__main__":
+    markers_fname = sys.argv[1]
+    out_markers_ec_fn = sys.argv[2]
+    out_groups_fn = sys.argv[3]
+    out_marker_genes_fn = sys.argv[1]
+    ec_index(
+        markers_fname, out_markers_ec_fn, out_groups_fn, out_marker_genes_fn
+    )  # noqa
