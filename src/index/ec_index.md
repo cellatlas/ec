@@ -1,10 +1,10 @@
-# ec fromtext
+# ec index
 
 ```bash
-ec fromtext [options] ec-file
+ec index [options] ec-file
 ```
 
-convert the .ec file in text form to number form
+convert the markers txt file to number form
 
 ## Options
 
@@ -18,11 +18,11 @@ The name of the elements file
 
 `-o`, `--output`
 
-The name of the ec file (number form)
+The name of the ec matrix
 
 ## Examples
 
 ```bash
-$ ec fromtext -g groups.txt -e elements.txt -o matrix.ec markers.txt
+$ ec index -g groups.txt -e elements.txt -o matrix.ec markers.txt
 # convert from text to number representation
 ```
