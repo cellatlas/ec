@@ -12,17 +12,17 @@ convert the markers txt file to number form
 
 The name of the groups file
 
-`-e`, `--elements`
+`-t`, `--targets`
 
-The name of the elements file
+The name of the targets file
 
-`-o`, `--output`
+`-e`, `--ec`
 
-The name of the ec matrix
+The name of the ec matrix file
 
 ## Examples
 
 ```bash
-$ ec index -g groups.txt -e elements.txt -o matrix.ec markers.txt
+$ ec index -g groups.txt -t targets.txt -e markers.ec markers.txt
 # convert from text to number representation
 ```
