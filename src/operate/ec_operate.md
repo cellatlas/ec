@@ -1,34 +1,25 @@
-# ec operate
+# ec merge
 
 ```bash
-ec operate [options] ec-file
+ec merge [options] markers.txt_1 markers.txt_2
 ```
 
-operate on multiple ec files.
+Merge two markers.txt files.
 
-note to self: should the .ec file be normally in text or number form? something to decide
 
 ## Options
 
 `-m`, `--method`
 
-The method to apply. One of: intersect, setdiff, leftjoin, rightjoin, union
-
-`-g`, `--groups`
-
-Comma delimited list of groups
-
-`-e`, `--elements`
-
-Comma delimited list of elements
+The method to apply. One of: intersect, union
 
 `-o`, `--output`
 
-The name of the ec file (number form)
+Path for the output merged markers.txt file
 
 ## Examples
 
 ```bash
-$ ec operate -g groups.txt -e elements.txt -o matrix.ec markers.txt
-# convert from text to number representation
+$ ec merge -m union -o merged.txt markers_1.txt markers_2.txt
+# Merge markers_1.txt and markers_2.txt (union)
 ```
