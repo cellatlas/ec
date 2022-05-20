@@ -10,15 +10,15 @@ convert the markers txt file to number form
 
 `-g`, `--groups`
 
-The name of the groups file
+Path of the output groups file
 
 `-t`, `--targets`
 
-The name of the targets file
+Path of the output targets file
 
 `-e`, `--ec`
 
-The name of the ec matrix file
+Path of the output ec matrix file
 
 ## Examples
 
