@@ -19,15 +19,15 @@ Check whether the provided groups, elements, ec matrix and markers.txt files are
 
 The name of the groups file
 
-`-e`, `--elements`
+`-t`, `--targets`
 
 The name of the elements file
 
-`-m`, `--matrixec`
+`-e`, `--ec`
 
 Tha name of the ec matrix file
 
-`-t`, `--txtmarkers`
+`-m`, `--markers`
 The name of the markers txt file 
 ## Examples
 
