@@ -1,7 +1,7 @@
 # ec index
 
 ```bash
-ec index [options] ec-file
+ec index [options] markers.txt
 ```
 
 convert the markers txt file to number form
