@@ -29,12 +29,12 @@ def read_markers(
 ):
     with open(fname, "r") as f:
         for idx, line in enumerate(f.readlines()):
-            stripped = line.strip().split("\t")
-            if len(stripped) == 1:
-                ct = stripped[0]
+            splitted = line.strip().split("\t")
+            if len(splitted) == 1:
+                ct = splitted[0]
                 genes = []
             else:
-                ct, genes = stripped
+                ct, genes = splitted
             celltype[ct] = idx
 
             # two things
@@ -66,8 +66,14 @@ def dict_to_list(groups, targets):
 def read_ec_matrix(fname, markers_ec=defaultdict(list)):
     with open(fname, "r") as f:
         for idx, line in enumerate(f.readlines()):
-            ct_id, gene_ids = line.strip().split("\t")
-            markers_ec[int(ct_id)] = [int(i) for i in gene_ids.split(",")]
+            splitted = line.strip().split("\t")
+            if len(splitted) == 1:
+                ct_id = splitted[0]
+                gene_ids = []
+                markers_ec[int(ct_id)] = []
+            else:
+                ct_id, gene_ids = line.strip().split("\t")
+                markers_ec[int(ct_id)] = [int(i) for i in gene_ids.split(",")]
         
 def read_markers_txt(fname, markers=defaultdict(list)):
     with open(fname, "r") as f:
