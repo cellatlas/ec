@@ -29,26 +29,34 @@ def read_markers(
 ):
     with open(fname, "r") as f:
         for idx, line in enumerate(f.readlines()):
-            ct, genes = line.strip().split("\t")
+            stripped = line.strip().split("\t")
+            if len(stripped) == 1:
+                ct = stripped[0]
+                genes = []
+            else:
+                ct, genes = stripped
             celltype[ct] = idx
 
             # two things
             # 1. make marker_genes list
             # 2. make markers_ec
-            for g in genes.split(","):
-                gidx = len(marker_genes)
+            if genes:
+                for g in genes.split(","):
+                    gidx = len(marker_genes)
 
-                # check if the gene has been added already
-                if g in marker_genes.keys():  # gene repeated
-                    gidx = marker_genes[g]
-                else:
-                    marker_genes[g] = gidx
+                    # check if the gene has been added already
+                    if g in marker_genes.keys():  # gene repeated
+                        gidx = marker_genes[g]
+                    else:
+                        marker_genes[g] = gidx
 
-                # for the cell type index, add the marker gene index
-                markers_ec[celltype[ct]].append(marker_genes[g])
+                    # for the cell type index, add the marker gene index
+                    markers_ec[celltype[ct]].append(marker_genes[g])
 
-            # sort the marker genes
-            markers_ec[celltype[ct]] = sorted(markers_ec[celltype[ct]])
+                # sort the marker genes
+                markers_ec[celltype[ct]] = sorted(markers_ec[celltype[ct]])
+            else:
+                markers_ec[celltype[ct]] = []
 
 def dict_to_list(groups, targets):
     groups = list(groups.keys())
