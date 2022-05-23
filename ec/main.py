@@ -4,6 +4,7 @@ import sys
 from index import ec_index
 from verify import ec_verify
 from merge import ec_merge
+from mark import ec_mark
 
 #def main():
 # """
@@ -119,7 +120,6 @@ parser_merge.add_argument(
     required = True,    
     help="Path to output merged markers.txt file",
 )
-
 parser_merge.add_argument(
     "-m",
     "--method",
@@ -134,13 +134,61 @@ parser_merge.add_argument(
     type=str,
     help="Path to first markers.txt file",
 )
-
 parser_merge.add_argument(
     "markers_2",
     metavar='markers.txt_2',
     type=str,
     help="Path to second markers.txt file",
 )
+
+
+# mark subparser
+mark_info = "Created markers.txt from deg.txt file"
+parser_mark = subparsers.add_parser(
+    "mark", description=mark_info, help=mark_info, add_help=True
+)
+
+# mark subparser arguments
+parser_mark.add_argument(
+    "-p",
+    "--mp",
+    default=None,
+    type=float,
+    required = True,
+    help="Minimum corrected p-value",
+)
+parser_mark.add_argument(
+    "-f",
+    "--mfc",
+    default=None,
+    type=float,
+    required = True,    
+    help="Minimum log2 fold-change",
+)
+parser_mark.add_argument(
+    "-g",
+    "--gs",
+    default=None,
+    type=int,
+    required = True,    
+    help="Maximum number of genes shared",
+)
+parser_mark.add_argument(
+    "-o",
+    "--output",
+    default=None,
+    type=str,
+    required = True,    
+    help="Output path",
+)
+parser_mark.add_argument(
+    'deg',
+    metavar='deg.txt',
+    type=str,
+    help='Path to deg.txt file to extract markers from'
+)
+
+
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -159,3 +207,7 @@ if args.command == 'verify':
 #ec merge
 if args.command == 'merge':
     ec_merge(args.markers_1, args.markers_2, args.output, args.method)
+    
+if args.command == 'mark':
+    ec_mark(args.mp, args.mfc, args.gs, args.output, args.deg)
+    
