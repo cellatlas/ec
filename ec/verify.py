@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict 
-from index import ec_index
-from utils import (write_dict, write_markers, read_markers, read_ec_matrix, read_txt, dict_to_list)
+from ec.index import ec_index
+from ec.utils import (write_dict, write_markers, read_markers, read_ec_matrix, read_txt, dict_to_list)
 
 import numpy as np
 

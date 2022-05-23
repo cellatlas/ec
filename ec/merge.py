@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict 
-from utils import (read_markers_txt, write_markers)
+from ec.utils import (read_markers_txt, write_markers)
 
 def ec_merge(marker_1_fname, marker_2_fname, o_fname, method):
 

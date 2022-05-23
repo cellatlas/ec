@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import pandas as pd
-from utils import write_markers
+from ec.utils import write_markers
 
 
 def ec_mark(mp, mfc, gs, output_fname, deg_fname):

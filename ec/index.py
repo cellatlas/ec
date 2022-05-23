@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from collections import defaultdict 
-from utils import (write_dict, write_markers, read_markers)
+from ec.utils import (write_dict, write_markers, read_markers)
 
 def ec_index(
     out_groups_fn, out_targets_fn, out_markers_ec_fn, markers_fname
