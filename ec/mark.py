@@ -7,7 +7,7 @@ from ec.utils import write_markers
 def ec_mark(mp, mfc, gs, output_fname, deg_fname):
   # column names
   pval_col_name = 'p_corr'
-  fc_col_name = 'es'
+  fc_col_name = 'log_fc'
   
   # read dataframe
   df = pd.read_csv(deg_fname, sep = '\t')
