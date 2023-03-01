@@ -1,214 +1,60 @@
+from . import __version__
 import argparse
 import sys
+import logging
+from .ec_index import setup_ec_index_args, validate_ec_index_args
+from .ec_mark import setup_ec_mark_args, validate_ec_mark_args
+from .ec_merge import setup_ec_merge_args, validate_ec_merge_args
+from .ec_verify import setup_ec_verify_args, validate_ec_verify_args
 
-from ec.index import ec_index
-from ec.verify import ec_verify
-from ec.merge import ec_merge
-from ec.mark import ec_mark
 
 def main():
-    """
-    Main ec function to use the package from the command line
-    """
-
-    # Define parent parser
-    parser = argparse.ArgumentParser(
-        description=f"ec", add_help=False
-    )
-    # Initiate subparsers
-    subparsers = parser.add_subparsers(dest="command")
-    # Define parent (not sure why I need both parent parser and parent, but otherwise it does not work)
-    #parent = argparse.ArgumentParser(add_help=False)
-
-    # Add custom help argument to parent parser
+    # setup parsers
+    parser = argparse.ArgumentParser(description=f"ec {__version__}: handle ec files")
     parser.add_argument(
-        "-h", "--help", action="store_true", help="Print help."
+        "--verbose", help="Print debugging information", action="store_true"
+    )
+    subparsers = parser.add_subparsers(
+        dest="command",
+        metavar="<CMD>",
     )
 
-    # index subparser
-    index_info = "Index markers.txt file into groups, targets, and ec matrix files"
-    parser_index = subparsers.add_parser(
-        "index", description=index_info, help=index_info, add_help=True
-    )
+    # Setup the arguments for all subcommands
+    command_to_parser = {
+        "index": setup_ec_index_args(subparsers),
+        "mark": setup_ec_mark_args(subparsers),
+        "merge": setup_ec_merge_args(subparsers),
+        "verify": setup_ec_verify_args(subparsers),
+    }
 
-    # index subparser arguments
-    parser_index.add_argument(
-        "-g",
-        "--groups",
-        default=None,
-        type=str,
-        required = True,
-        help="Path to output groups file",
-    )
-    parser_index.add_argument(
-        "-t",
-        "--targets",
-        default=None,
-        type=str,
-        required = True,
-        help="Path to output targets file",
-    )
-    parser_index.add_argument(
-        "-e",
-        "--ec",
-        default=None,
-        type=str,
-        required = True,
-        help="Path to output ec matrix",
-    )
-    parser_index.add_argument(
-        'markers',
-        metavar='markers.txt',
-        type=str,
-        help='Path to markers.txt file'
-    )
-
-
-    # verify subparser
-    verify_info = "Check whether the provided groups, targets, ec matrix and markers.txt files are correct and compatible with each other"
-    parser_verify = subparsers.add_parser(
-        "verify", description=verify_info, help=verify_info, add_help=True
-    )
-
-    # verify subparser arguments
-    parser_verify.add_argument(
-        "-g",
-        "--groups",
-        default=None,
-        type=str,
-        required = True,
-        help="Path to groups file to verify",
-    )
-    parser_verify.add_argument(
-        "-t",
-        "--targets",
-        default=None,
-        type=str,
-        required = True,    
-        help="Path to targets file to verify",
-    )
-    parser_verify.add_argument(
-        "-e",
-        "--ec",
-        default=None,
-        type=str,
-        required = True,    
-        help="Path to ec matrix to verify",
-    )
-    parser_verify.add_argument(
-        'markers',
-        metavar='markers.txt',
-        type=str,
-        help='Path to markers.txt file to verify'
-    )
-
-
-    # merge subparser
-    merge_info = "Merge two markers.txt files (union or intersection)"
-    parser_merge = subparsers.add_parser(
-        "merge", description=merge_info, help=merge_info, add_help=True
-    )
-
-    # merge subparser arguments
-    parser_merge.add_argument(
-        "-o",
-        "--output",
-        default=None,
-        type=str,
-        required = True,    
-        help="Path to output merged markers.txt file",
-    )
-    parser_merge.add_argument(
-        "-m",
-        "--method",
-        choices=['intersection', 'union'],
-        type=str,
-        required = True,
-        help='Method to merge. Intersection or union'
-    )
-    parser_merge.add_argument(
-        "markers_1",
-        metavar='markers.txt_1',
-        type=str,
-        help="Path to first markers.txt file",
-    )
-    parser_merge.add_argument(
-        "markers_2",
-        metavar='markers.txt_2',
-        type=str,
-        help="Path to second markers.txt file",
-    )
-
-
-    # mark subparser
-    mark_info = "Created markers.txt from deg.txt file"
-    parser_mark = subparsers.add_parser(
-        "mark", description=mark_info, help=mark_info, add_help=True
-    )
-
-    # mark subparser arguments
-    parser_mark.add_argument(
-        "-p",
-        "--mp",
-        default=None,
-        type=float,
-        required = True,
-        help="Minimum corrected p-value",
-    )
-    parser_mark.add_argument(
-        "-f",
-        "--mfc",
-        default=None,
-        type=float,
-        required = True,    
-        help="Minimum log2 fold-change",
-    )
-    parser_mark.add_argument(
-        "-g",
-        "--gs",
-        default=None,
-        type=int,
-        required = True,    
-        help="Maximum number of genes shared",
-    )
-    parser_mark.add_argument(
-        "-o",
-        "--output",
-        default=None,
-        type=str,
-        required = True,    
-        help="Output path",
-    )
-    parser_mark.add_argument(
-        'deg',
-        metavar='deg.txt',
-        type=str,
-        help='Path to deg.txt file to extract markers from'
-    )
-
-
-
+    # Show help when no arguments are given
     if len(sys.argv) == 1:
-        parser.print_help()
-        
+        parser.print_help(sys.stderr)
+        sys.exit(1)
+    if len(sys.argv) == 2:
+        if sys.argv[1] in command_to_parser:
+            command_to_parser[sys.argv[1]].print_help(sys.stderr)
+        else:
+            parser.print_help(sys.stderr)
+        sys.exit(1)
+
     args = parser.parse_args()
 
+    # setup logging
+    logging.basicConfig(
+        format="[%(asctime)s] %(levelname)7s %(message)s",
+        level=logging.DEBUG if args.verbose else logging.INFO,
+    )
 
-    # ec index
-    if args.command == 'index':
-        ec_index(args.groups, args.targets, args.ec, args.markers)
-        
-    # ec verify
-    if args.command == 'verify':
-        ec_verify(args.groups, args.targets, args.ec, args.markers)
+    # Setup validator and runner for all subcommands (validate and run if valid)
+    COMMAND_TO_FUNCTION = {
+        "index": validate_ec_index_args,
+        "mark": validate_ec_mark_args,
+        "merge": validate_ec_merge_args,
+        "verify": validate_ec_verify_args,
+    }
+    COMMAND_TO_FUNCTION[sys.argv[1]](parser, args)
 
-    #ec merge
-    if args.command == 'merge':
-        ec_merge(args.markers_1, args.markers_2, args.output, args.method)
-        
-    if args.command == 'mark':
-        ec_mark(args.mp, args.mfc, args.gs, args.output, args.deg)
-    
 
 if __name__ == "__main__":
     main()
