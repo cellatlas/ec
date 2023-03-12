@@ -6,7 +6,7 @@ from .ec_index import setup_ec_index_args, validate_ec_index_args
 from .ec_mark import setup_ec_mark_args, validate_ec_mark_args
 from .ec_merge import setup_ec_merge_args, validate_ec_merge_args
 from .ec_verify import setup_ec_verify_args, validate_ec_verify_args
-
+from .ec_filter import setup_ec_filter_args, validate_ec_filter_args
 
 def main():
     # setup parsers
@@ -25,6 +25,7 @@ def main():
         "mark": setup_ec_mark_args(subparsers),
         "merge": setup_ec_merge_args(subparsers),
         "verify": setup_ec_verify_args(subparsers),
+        "filter": setup_ec_filter_args(subparsers),
     }
 
     # Show help when no arguments are given
@@ -52,6 +53,7 @@ def main():
         "mark": validate_ec_mark_args,
         "merge": validate_ec_merge_args,
         "verify": validate_ec_verify_args,
+        "filter": validate_ec_filter_args,
     }
     COMMAND_TO_FUNCTION[sys.argv[1]](parser, args)
 
