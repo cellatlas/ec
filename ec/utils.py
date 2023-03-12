@@ -78,9 +78,15 @@ def read_ec_matrix(fname, markers_ec=defaultdict(list)):
 def read_markers_txt(fname, markers=defaultdict(list)):
     with open(fname, "r") as f:
         for idx, line in enumerate(f.readlines()):
-            ct_id, gene_ids = line.strip().split("\t")
-            markers[ct_id] = [i for i in gene_ids.split(",")]
-                            
+            split = line.strip().split("\t")
+            if len(split) == 2:
+                ct_id, gene_ids = split
+                markers[ct_id] = [i for i in gene_ids.split(",")]
+            if len(split) == 1:
+                ct_id = split
+                markers[ct_id] = [] 
+
+
 def read_txt(fname):
   with open (fname, 'r') as f:
     return [line.rstrip() for line in f]
