@@ -83,7 +83,7 @@ def read_markers_txt(fname, markers=defaultdict(list)):
                 ct_id, gene_ids = split
                 markers[ct_id] = [i for i in gene_ids.split(",")]
             if len(split) == 1:
-                ct_id = split
+                ct_id = split[0]
                 markers[ct_id] = [] 
 
 
