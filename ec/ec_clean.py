@@ -32,7 +32,8 @@ def validate_ec_clean_args(parser, args):
 def run_ec_clean(output, markers_fname):
 
     markers = defaultdict(list)
-    read_markers_txt(markers_fname, markers)
+    header = []
+    read_markers_txt(markers_fname, markers, header)
 
     # combine duplicate cell types by 1. taking the union of the markers and 2. keep only the unique marker names
     cleaned_markers = defaultdict(list)
@@ -42,4 +43,4 @@ def run_ec_clean(output, markers_fname):
     for ct in cleaned_markers.keys():
         cleaned_markers[ct] = list(set(cleaned_markers[ct]))
 
-    write_markers(output, cleaned_markers)
+    write_markers(output, cleaned_markers, header)

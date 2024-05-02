@@ -42,7 +42,8 @@ def validate_ec_convert_args(parser, args):
 def run_ec_convert(map_fn, output, markers_fname):
 
     markers = defaultdict(list)
-    read_markers_txt(markers_fname, markers)
+    header = []
+    read_markers_txt(markers_fname, markers, header)
 
     df = pd.read_csv(map_fn, sep="\t", header=None, names=["name0", "name1"])
     df["name1"].fillna(df["name0"], inplace=True)
@@ -66,4 +67,4 @@ def run_ec_convert(map_fn, output, markers_fname):
 
     print(f"Number of mapped elements not found in mapping file: {counter}")
 
-    write_markers(output, converted_markers)
+    write_markers(output, converted_markers, header)

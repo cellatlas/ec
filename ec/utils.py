@@ -44,6 +44,7 @@ def read_markers(
         for line in f.readlines():
             if line[0] == "#":
                 data = line.strip()[2:].split("\t")
+                print(data)
                 header.append(
                     {
                         "species": data[0],
@@ -105,9 +106,8 @@ def read_ec_matrix(fname, markers_ec=defaultdict(list)):
                 markers_ec[int(ct_id)] = [int(i) for i in gene_ids.split(",")]
 
 
-def read_markers_txt(fname, markers=defaultdict(list)):
+def read_markers_txt(fname, markers=defaultdict(list), header=[]):
     with open(fname, "r") as f:
-        header = []
         for idx, line in enumerate(f.readlines()):
             if line[0] == "#":
                 data = line.strip()[2:].split("\t")
