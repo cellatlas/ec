@@ -2,11 +2,14 @@ from . import __version__
 import argparse
 import sys
 import logging
+from .ec_clean import setup_ec_clean_args, validate_ec_clean_args
+from .ec_convert import setup_ec_convert_args, validate_ec_convert_args
 from .ec_index import setup_ec_index_args, validate_ec_index_args
 from .ec_mark import setup_ec_mark_args, validate_ec_mark_args
 from .ec_merge import setup_ec_merge_args, validate_ec_merge_args
 from .ec_verify import setup_ec_verify_args, validate_ec_verify_args
 from .ec_filter import setup_ec_filter_args, validate_ec_filter_args
+
 
 def main():
     # setup parsers
@@ -21,6 +24,8 @@ def main():
 
     # Setup the arguments for all subcommands
     command_to_parser = {
+        "clean": setup_ec_clean_args(subparsers),
+        "convert": setup_ec_convert_args(subparsers),
         "index": setup_ec_index_args(subparsers),
         "mark": setup_ec_mark_args(subparsers),
         "merge": setup_ec_merge_args(subparsers),
@@ -49,6 +54,8 @@ def main():
 
     # Setup validator and runner for all subcommands (validate and run if valid)
     COMMAND_TO_FUNCTION = {
+        "clean": validate_ec_clean_args,
+        "convert": validate_ec_convert_args,
         "index": validate_ec_index_args,
         "mark": validate_ec_mark_args,
         "merge": validate_ec_merge_args,
