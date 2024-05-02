@@ -2,6 +2,7 @@ from . import __version__
 import argparse
 import sys
 import logging
+from .ec_check import setup_ec_check_args, validate_ec_check_args
 from .ec_clean import setup_ec_clean_args, validate_ec_clean_args
 from .ec_convert import setup_ec_convert_args, validate_ec_convert_args
 from .ec_index import setup_ec_index_args, validate_ec_index_args
@@ -24,6 +25,7 @@ def main():
 
     # Setup the arguments for all subcommands
     command_to_parser = {
+        "check": setup_ec_check_args(subparsers),
         "clean": setup_ec_clean_args(subparsers),
         "convert": setup_ec_convert_args(subparsers),
         "index": setup_ec_index_args(subparsers),
@@ -54,6 +56,7 @@ def main():
 
     # Setup validator and runner for all subcommands (validate and run if valid)
     COMMAND_TO_FUNCTION = {
+        "check": validate_ec_check_args,
         "clean": validate_ec_clean_args,
         "convert": validate_ec_convert_args,
         "index": validate_ec_index_args,

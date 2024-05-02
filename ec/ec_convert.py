@@ -30,16 +30,25 @@ def setup_ec_convert_args(parser):
         help="Path to output converted markers.txt file",
     )
     parser_convert.add_argument(
+        "-b",
+        "--bad_targets",
+        default=None,
+        type=str,
+        required=False,
+        help="Path to targets that are not converted",
+    )
+
+    parser_convert.add_argument(
         "markers", metavar="markers.txt", type=str, help="Path to markers.txt file"
     )
     return parser_convert
 
 
 def validate_ec_convert_args(parser, args):
-    run_ec_convert(args.mapfile, args.output, args.markers)
+    run_ec_convert(args.mapfile, args.output, args.markers, args.bad_targets)
 
 
-def run_ec_convert(map_fn, output, markers_fname):
+def run_ec_convert(map_fn, output, markers_fname, bad_targets_fname):
 
     markers = defaultdict(list)
     header = []
@@ -53,6 +62,7 @@ def run_ec_convert(map_fn, output, markers_fname):
     # in which case, add all duplicates to the marker list
     converted_markers = defaultdict(list)
     counter = 0
+    bad = []
     for ct in markers.keys():
         for idx, target in enumerate(markers[ct]):
             if target in df["name0"].values:
@@ -61,6 +71,7 @@ def run_ec_convert(map_fn, output, markers_fname):
                     converted_markers[ct].append(df["name1"][i])
             else:
                 # keep the original gene symbol if not found in mapping file
+                bad.append(target)
                 converted_markers[ct].append(target)
                 print(f"{target} not found in mapping file")
                 counter += 1
@@ -68,3 +79,7 @@ def run_ec_convert(map_fn, output, markers_fname):
     print(f"Number of mapped elements not found in mapping file: {counter}")
 
     write_markers(output, converted_markers, header)
+    if bad:
+        with open(bad_targets_fname, "w") as f:
+            for item in bad:
+                f.write("%s\n" % item)

@@ -40,16 +40,15 @@ def validate_ec_filter_args(parser, args):
 
 def run_ec_filter(bad_targets_fname, output, markers_fname):
 
-  markers = defaultdict(list)
-  read_markers_txt(markers_fname, markers)
+    markers = defaultdict(list)
+    header = []
+    read_markers_txt(markers_fname, markers, header)
 
-  bad_targets = read_txt(bad_targets_fname)
+    bad_targets = read_txt(bad_targets_fname)
 
-  for ct in markers.keys():
-    for target in bad_targets:
-      if target in markers[ct]:
-        markers[ct].remove(target)
+    for ct in markers.keys():
+        for target in bad_targets:
+            if target in markers[ct]:
+                markers[ct].remove(target)
 
-  write_markers(output, markers)
-
-
+    write_markers(output, markers, header)
