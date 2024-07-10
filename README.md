@@ -35,15 +35,104 @@ ec 0.0.1: handle ec files
 
 positional arguments:
   <CMD>
+    check     check markers.txt file
+    clean     clean markers.txt file
+    convert   Convert file from marker gene names to ids given a t2g file
     index     Index markers.txt file into groups, targets, and ec matrix files
     mark      Created markers.txt from deg.txt file
     merge     Merge two markers.txt files (union or intersection)
-    verify    Check whether the provided groups, targets, ec matrix and markers.txt files are correct and compatible with each other
+    verify    Check whether the provided groups, targets, ec matrix and markers.txt files are
+              correct and compatible with each other
     filter    Filter out bad genes from markers.txt file
 
 optional arguments:
   -h, --help  show this help message and exit
   --verbose   Print debugging information
+```
+
+### `ec check`: check markers.txt files
+
+`ec check` finds celltypes where the sets of genes are comparable (contained within another).
+
+```bash
+ec check [-h] [-o OUTPUT] markers.txt
+```
+
+- `-o OUTPUT`: path to save the output
+- `markers.txt`: the markers.txt file
+
+#### Examples
+
+```bash
+$ cat markers.txt
+CT1     GA,GB,GC
+CT2     GB,GC
+CT3     GA,GD
+
+$ ec check markers.txt
+Group CT1: {'GB', 'GC', 'GA'} and
+Group CT2: {'GB', 'GC'} are comparable.
+```
+
+### `ec clean`: clean markers.txt files
+
+Combines duplicate cell types by taking the union of the markers and keeping only the unique marker names.
+
+```bash
+ec clean [-h] -o OUTPUT markers.txt
+```
+
+- `-o OUTPUT`: path to save the output
+- `markers.txt`: the markers.txt file
+
+#### Examples
+
+```bash
+$ cat markers.txt
+CT1     GA,GB,GC,GC
+CT2     GB,GC
+CT3     GA,GD
+
+$ ec clean -o clean.txt markers.txt
+$ cat clean.txt
+CT1     GA,GC,GB
+CT2     GC,GB
+CT3     GA,GD
+```
+
+### `ec convert`: Convert file from marker gene names to ids given a t2g file
+
+Convert markers in a markers.txt file with a mapping file. A common usecase is to convert gene names/gene ids to each other.
+
+```bash
+ec convert [-h] -m MAPFILE -o OUTPUT [-b BAD_TARGETS] markers.txt
+```
+
+- `-m MAPFILE`: Path to mapping file
+- `-o OUTPUT`: Path to output converted markers.txt file
+- `-b BAD_TARGETS`: Path to output targets that are not converted
+
+#### Examples
+
+```bash
+$ cat markers.txt
+CT1     GA,GB,GC,GC
+CT2     GB,GC
+CT3     GA,GD
+
+$ cat convert_map.txt
+GA      GIDA
+GB      GIDB
+GC      GIDC
+GD      GIDD
+
+$ ec convert -m convert_map.txt -o convert.txt markers.txt
+Number of mapped elements not found in mapping file: 0
+
+$ cat convert.txt
+CT1     GIDA,GIDB,GIDC,GIDC
+CT2     GIDB,GIDC
+CT3     GIDA,GIDD
 ```
 
 ### `ec index`: index markers.txt into groups, targets, and ec matrix
