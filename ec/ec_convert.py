@@ -79,7 +79,11 @@ def run_ec_convert(map_fn, output, markers_fname, bad_targets_fname):
     print(f"Number of mapped elements not found in mapping file: {counter}")
 
     write_markers(output, converted_markers, header)
+
     if bad:
         with open(bad_targets_fname, "w") as f:
             for item in bad:
                 f.write("%s\n" % item)
+    else:
+        # Create an empty file if bad is empty
+        open(bad_targets_fname, "w").close()

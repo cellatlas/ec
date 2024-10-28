@@ -102,6 +102,18 @@ def ec_mark(df, min_pval, min_logfc, max_gene_share, max_per_celltype):
     # extract markers with highet effect size
     markers = m.groupby("group").tail(n_sample)
 
+    #   {
+    #     "cell_type": "human ASPCs",
+    #     "cell_state": "None",
+    #     "gene": "PDGFRA",
+    #     "source": {
+    #       "source_id": "text",
+    #       "source_type": "text",
+    #       "source_rationale": "We identified six distinct subpopulations of human ASPCs (see Supplementary Note 1) in subclustered scRNA-seq and sNuc-seq samples, all of which express the common marker gene PDGFRA (Extended Data Fig. 7a, b)."
+    #     }
+    #   },
+    print(markers.head())
+
     # make dictionary
     markers_dict = markers.groupby("group")["target"].apply(lambda x: list(x)).to_dict()
     return markers_dict
