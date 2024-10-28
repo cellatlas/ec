@@ -57,11 +57,36 @@ def setup_ec_mark_args(parser):
         type=str,
         help="Path to degs.txt file to extract markers from",
     )
+    parser_mark.add_argument(
+        "-fmt",
+        "--format",
+        default="txt",
+        type=str,
+        required=False,
+        help="Output format",
+        choices=["txt", "json"],
+    )
+
     return parser_mark
 
 
 def validate_ec_mark_args(parser, args):
-    run_ec_mark(args.mp, args.mfc, args.gs, args.mpct, args.output, args.degs)
+    markers = run_ec_mark(args.mp, args.mfc, args.gs, args.mpct, args.output, args.degs)
+
+    if args.format == "json":
+        import json
+
+        json_data = markers.to_dict(orient="records")
+        with open(args.output, "w") as f:
+            json.dump(json_data, f, indent=4)
+    else:
+        # make dictionary
+        markers_dict = (
+            markers.groupby("group")["target"].apply(lambda x: list(x)).to_dict()
+        )
+        write_markers(args.output, markers_dict)
+
+    return
 
 
 def run_ec_mark(mp, mfc, gs, mpct, output_fname, deg_fname):
@@ -69,10 +94,9 @@ def run_ec_mark(mp, mfc, gs, mpct, output_fname, deg_fname):
     # read dataframe
     df = pd.read_csv(deg_fname, sep="\t")
 
-    markers_dict = ec_mark(df, mp, mfc, gs, mpct)
+    markers = ec_mark(df, mp, mfc, gs, mpct)
 
-    # write dictionary
-    write_markers(output_fname, markers_dict)
+    return markers
 
 
 def ec_mark(df, min_pval, min_logfc, max_gene_share, max_per_celltype):
@@ -101,6 +125,7 @@ def ec_mark(df, min_pval, min_logfc, max_gene_share, max_per_celltype):
 
     # extract markers with highet effect size
     markers = m.groupby("group").tail(n_sample)
+    return markers
 
     #   {
     #     "cell_type": "human ASPCs",
@@ -112,8 +137,3 @@ def ec_mark(df, min_pval, min_logfc, max_gene_share, max_per_celltype):
     #       "source_rationale": "We identified six distinct subpopulations of human ASPCs (see Supplementary Note 1) in subclustered scRNA-seq and sNuc-seq samples, all of which express the common marker gene PDGFRA (Extended Data Fig. 7a, b)."
     #     }
     #   },
-    print(markers.head())
-
-    # make dictionary
-    markers_dict = markers.groupby("group")["target"].apply(lambda x: list(x)).to_dict()
-    return markers_dict
